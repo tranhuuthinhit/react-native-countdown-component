@@ -21,6 +21,8 @@ class CountDown extends React.Component {
     digitBgColor: PropTypes.string,
     digitTxtColor: PropTypes.string,
     digitTxtSize: PropTypes.number,
+    digitTxtMarginTop: PropTypes.number,
+    timeContWidth: PropTypes.number,
     timeTxtColor: PropTypes.string,
     timeToShow: PropTypes.array,
     size: PropTypes.number,
@@ -88,7 +90,7 @@ class CountDown extends React.Component {
       <View style={[
         styles.digitCont,
         {backgroundColor: digitBgColor},
-        {width: size * 2.3, height: size * 2.6},
+        {width: size * 2, height: size * 2.3},
       ]}>
         <Text style={[
           styles.digitTxt,
@@ -102,7 +104,7 @@ class CountDown extends React.Component {
   };
 
   renderDoubleDigits = (label, digits) => {
-    const {timeTxtColor, digitTxtSize} = this.props;
+    const {timeTxtColor, digitTxtSize, digitTxtMarginTop} = this.props;
 
     return (
       <View key={label} style={styles.doubleDigitCont}>
@@ -113,6 +115,7 @@ class CountDown extends React.Component {
           styles.timeTxt,
           {fontSize: digitTxtSize},
           {color: timeTxtColor},
+          {marginTop: digitTxtMarginTop}
         ]}>
           {label}
         </Text>
@@ -121,7 +124,7 @@ class CountDown extends React.Component {
   };
 
   renderCountDown = () => {
-    const {timeToShow} = this.props;
+    const {timeToShow, timeContWidth} = this.props;
     const {until} = this.state;
     const {days, hours, minutes, seconds} = this.getTimeLeft();
     const newTime = sprintf('%02d:%02d:%02d:%02d', days, hours, minutes, seconds).split(':');
@@ -129,7 +132,7 @@ class CountDown extends React.Component {
 
     return (
       <Component
-        style={styles.timeCont}
+        style={[styles.timeCont, { width: timeContWidth}]}
         onPress={this.props.onPress}
       >
         {_.includes(timeToShow, 'D') ? this.renderDoubleDigits('Days', newTime[0]) : null}
@@ -154,6 +157,9 @@ CountDown.defaultProps = {
   digitTxtColor: DEFAULT_DIGIT_TXT_COLOR,
   timeTxtColor: DEFAULT_TIME_TXT_COLOR,
   timeToShow: DEFAULT_TIME_TO_SHOW,
+  digitTxtSize: 13,
+  digitTxtMarginTop: 5,
+  timeContWidth: 200,
   until: 0,
   size: 15,
 };
@@ -161,7 +167,7 @@ CountDown.defaultProps = {
 const styles = StyleSheet.create({
   timeCont: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   timeTxt: {
     color: 'white',
